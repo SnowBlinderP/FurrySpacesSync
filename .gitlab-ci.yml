@@ -36,7 +36,7 @@ build_react_app:
 
 # This job runs in the 'deploy' stage.
 # It deploys the built application to Cloudflare Workers.
-deploy_to_worker:
+deploy_to_pages:
   stage: deploy
   # This section ensures the job has access to the build artifacts
   dependencies:
@@ -46,16 +46,16 @@ deploy_to_worker:
     - echo "Installing Cloudflare Wrangler..."
     - npm install -g wrangler
 
-    # Run the Wrangler command to publish the project.
-    # This command reads the wrangler.toml file in your project root for configuration.
-    # You still need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID
+    # Run the Wrangler command to publish the project to Cloudflare Pages.
+    # The 'dist' directory is the folder containing your static site.
+    # You need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID
     # as CI/CD variables in your GitLab project settings.
-    - echo "Deploying to Cloudflare Workers..."
-    - wrangler deploy
+    - echo "Deploying to Cloudflare Pages..."
+    - wrangler pages deploy dist --project-name="furryspacesfrontend"
   environment:
     # Replace 'your-worker-name' and 'your-subdomain.workers.dev' with your actual worker URL.
     name: production
-    url: https://furryspacesfrontend.snowdns.workers.dev/
+    url: https://furryspacesfrontend.pages.dev/
   # This rule ensures the deploy job only runs on the main branch.
   # You can change 'main' to 'master' or any other branch.
   only:
