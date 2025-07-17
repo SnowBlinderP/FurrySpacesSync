@@ -2,7 +2,7 @@
 
 # Use an official Node.js image.
 # Pick a version compatible with your project's dependencies.
-image: node:18
+image: node:22
 
 # Define the stages of your pipeline.
 stages:
