@@ -51,7 +51,7 @@ deploy_to_pages:
     # You need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID
     # as CI/CD variables in your GitLab project settings.
     - echo "Deploying to Cloudflare Pages..."
-    - wrangler pages deploy dist --project-name="furryspacesfrontend" --branch "Production" --commit-hash $CI_COMMIT_SHORT_SHA
+    - wrangler pages deploy dist --project-name="furryspacesfrontend" --branch "main" --commit-hash $CI_COMMIT_SHORT_SHA
   environment:
     # Replace 'your-worker-name' and 'your-subdomain.workers.dev' with your actual worker URL.
     name: production
