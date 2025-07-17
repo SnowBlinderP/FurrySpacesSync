@@ -2,7 +2,7 @@
 
 # Use an official Node.js image.
 # Pick a version compatible with your project's dependencies.
-image: node:22
+image: node:18
 
 # Define the stages of your pipeline.
 stages:
@@ -30,8 +30,9 @@ build_react_app:
     - npm run build
   artifacts:
     # Pass the build output to the deploy stage.
+    # The build tool is outputting to 'dist/', so we point to that directory.
     paths:
-      - build/
+      - dist/
 
 # This job runs in the 'deploy' stage.
 # It deploys the built application to Cloudflare Workers.
@@ -54,7 +55,7 @@ deploy_to_worker:
   environment:
     # Replace 'your-worker-name' and 'your-subdomain.workers.dev' with your actual worker URL.
     name: production
-    url: https://furryspacesfrontend.snowdns.workers.dev
+    url: https://furryspacesfrontend.snowdns.workers.dev/
   # This rule ensures the deploy job only runs on the main branch.
   # You can change 'main' to 'master' or any other branch.
   only:
