@@ -1,0 +1,61 @@
+# .gitlab-ci.yml
+
+# Use an official Node.js image.
+# Pick a version compatible with your project's dependencies.
+image: node:22
+
+# Define the stages of your pipeline.
+stages:
+  - build
+  - deploy
+
+# Cache node_modules to speed up subsequent builds.
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+
+# This job runs in the 'build' stage.
+# It installs dependencies and builds the React application.
+build_react_app:
+  stage: build
+  script:
+    # Install project dependencies
+    - echo "Installing dependencies..."
+    - npm install
+    # Build the React application
+    - echo "Building React app..."
+    - npm run build
+  artifacts:
+    # Pass the build output to the deploy stage.
+    paths:
+      - build/
+
+# This job runs in the 'deploy' stage.
+# It deploys the built application to Cloudflare Workers.
+deploy_to_worker:
+  stage: deploy
+  # This section ensures the job has access to the build artifacts
+  dependencies:
+    - build_react_app
+  script:
+    # Install the Cloudflare Wrangler CLI
+    - echo "Installing Cloudflare Wrangler..."
+    - npm install -g wrangler
+
+    # Run the Wrangler command to publish the project.
+    # This command reads the wrangler.toml file in your project root for configuration.
+    # You still need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID
+    # as CI/CD variables in your GitLab project settings.
+    - echo "Deploying to Cloudflare Workers..."
+    - wrangler deploy
+  environment:
+    # Replace 'your-worker-name' and 'your-subdomain.workers.dev' with your actual worker URL.
+    name: production
+    url: https://furryspacesfrontend.snowdns.workers.dev
+  # This rule ensures the deploy job only runs on the main branch.
+  # You can change 'main' to 'master' or any other branch.
+  only:
+    - main
